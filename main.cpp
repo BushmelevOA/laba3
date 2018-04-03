@@ -1,18 +1,8 @@
+#include "temperature.h"
 #include <iostream>
-#include <sstream>
 #include <cassert>
 #include <vector>
 using namespace std;
-char Scale[] = "CKF";
-struct Temperature{
-    double temp;
-    char scale;
-};
-istream & operator >> (istream & in,Temperature & Temp);
-istream & operator >> (istream & in,Temperature & Temp) {
-    in >> Temp.temp;
-    in >> Temp.scale;
-}
 
 void test_temperature_input()
 {
@@ -33,52 +23,6 @@ void test_temperature_input()
     assert (Temp.temp == -400);
     assert (Temp.scale == 'F');
 }
- double convert (const Temperature & Temp,char scale_to) {
-     double Kelvins;
-     switch (Temp.scale) {
-     case 'k':
-     case 'K': {
-         Kelvins = Temp.scale;
-         break;
-     }
-     case 'f': {
-         Kelvins = ((9.0 / 5) * (Temp.temp - 273) + 32);
-         break;
-     }
-     case 'F': {
-         Kelvins = Temp.temp - 273.15;
-         break;
-     }
-     }
-     scale_to = Temp.scale;
-     switch (scale_to) {
-     case 'C':
-     case 'c': {
-         return Kelvins - 273.15;
-         break;
-     }
-     case 'K':
-     case 'k':
-         return Kelvins;
-         break;
-     }
- }
-bool operator < (const Temperature& lhs, const Temperature& rhs){
-         return convert(lhs,'K')< convert(rhs, 'K');
- }
-Temperature operator - (const Temperature& lhs,const Temperature& rhs){
-    Temperature ret_temp;
-    ret_temp.temp=convert (lhs, 'K') - convert (rhs, 'K');
-    ret_temp.scale = 'K';
-    return ret_temp;
-}
-Temperature operator / (const Temperature& lhs, const Temperature& rhs){
-    Temperature ret_temp;
-    ret_temp.temp=convert (lhs, 'K') / convert (rhs, 'K');
-    ret_temp.scale = 'K';
-    return ret_temp;
-}
-
 int main()
 {
     size_t number_count;
